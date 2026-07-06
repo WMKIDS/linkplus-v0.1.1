@@ -84,7 +84,7 @@
                         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">لوحة تحكم المنصة</h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">مرحباً بك، أيها المدير العام. نظرة شاملة على أداء LinkPlus.</p>
                     </div>
-                    <button class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium transition shadow-lg shadow-brand-500/30 flex items-center gap-2">
+                    <button onclick="document.getElementById('add-merchant-modal').classList.remove('hidden')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium transition shadow-lg shadow-brand-500/30 flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> إضافة تاجر جديد
                     </button>
                 </div>
@@ -150,12 +150,12 @@
                     <div class="p-5 border-b border-gray-100 dark:border-dark-border flex justify-between items-center">
                         <h2 class="text-lg font-bold">إدارة التجار</h2>
                         <div class="relative">
-                            <input type="text" placeholder="بحث عن تاجر..." class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-64 pr-10 p-2.5 outline-none transition">
+                            <input type="text" id="merchant-search" onkeyup="filterMerchants()" placeholder="بحث عن تاجر..." class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-64 pr-10 p-2.5 outline-none transition">
                             <i class="fa-solid fa-search absolute right-3 top-3.5 text-gray-400"></i>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm">
+                        <table class="w-full text-right text-sm" id="merchants-table">
                             <thead class="text-xs text-gray-500 bg-gray-50 dark:bg-slate-800 uppercase">
                                 <tr>
                                     <th class="px-6 py-4 font-medium">اسم المحل</th>
@@ -220,26 +220,26 @@
                     <span class="font-bold text-xl ml-3 hidden lg:block text-white truncate mr-3">Boutique El Anik</span>
                 </div>
                 <nav class="flex-1 py-6 space-y-2 px-3">
-                    <a href="#" class="flex items-center px-3 py-3 bg-brand-500/20 text-brand-400 rounded-lg border border-brand-500/50 transition">
+                    <button onclick="switchMerchantTab('pos')" id="tab-pos" class="w-full flex items-center px-3 py-3 bg-brand-500/20 text-brand-400 rounded-lg border border-brand-500/50 transition">
                         <i class="fa-solid fa-cash-register text-lg w-6 text-center"></i>
-                        <span class="hidden lg:block mr-3 font-medium">نقطة البيع (الكاس)</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
+                        <span class="hidden lg:block mr-3 font-medium text-right">نقطة البيع (الكاس)</span>
+                    </button>
+                    <button onclick="switchMerchantTab('inventory')" id="tab-inventory" class="w-full flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
                         <i class="fa-solid fa-boxes-stacked text-lg w-6 text-center"></i>
-                        <span class="hidden lg:block mr-3 font-medium">المخزون</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
+                        <span class="hidden lg:block mr-3 font-medium text-right">المخزون</span>
+                    </button>
+                    <button onclick="switchMerchantTab('debts')" id="tab-debts" class="w-full flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
                         <i class="fa-solid fa-book-open text-lg w-6 text-center"></i>
-                        <span class="hidden lg:block mr-3 font-medium">كارني الديون</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
+                        <span class="hidden lg:block mr-3 font-medium text-right">كارني الديون</span>
+                    </button>
+                    <button onclick="switchMerchantTab('stats')" id="tab-stats" class="w-full flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
                         <i class="fa-solid fa-chart-simple text-lg w-6 text-center"></i>
-                        <span class="hidden lg:block mr-3 font-medium">الإحصائيات</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
+                        <span class="hidden lg:block mr-3 font-medium text-right">الإحصائيات</span>
+                    </button>
+                    <button onclick="showToast('سيتم نقلك لإعدادات المتجر الإلكتروني')" class="w-full flex items-center px-3 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition">
                         <i class="fa-solid fa-globe text-lg w-6 text-center"></i>
-                        <span class="hidden lg:block mr-3 font-medium">المتجر الإلكتروني</span>
-                    </a>
+                        <span class="hidden lg:block mr-3 font-medium text-right">المتجر الإلكتروني</span>
+                    </button>
                 </nav>
                 <div class="p-4 border-t border-gray-700 text-center lg:text-right">
                     <div class="flex items-center justify-center lg:justify-start text-sm text-gray-400">
@@ -249,31 +249,31 @@
                 </div>
             </aside>
 
-            <!-- POS Area -->
-            <div class="flex-1 flex flex-col bg-gray-900">
+            <!-- Main Content Area for Merchant -->
+            <div class="flex-1 flex flex-col bg-gray-900 overflow-hidden relative">
 
-                <!-- Main POS Grid & Cart -->
-                <div class="flex-1 flex overflow-hidden">
+                <!-- POS Area (Default Tab) -->
+                <div id="merchant-tab-pos" class="merchant-tab-content flex-1 flex overflow-hidden">
                     <!-- Products Grid -->
                     <div class="flex-1 p-4 overflow-y-auto">
                         <!-- Categories -->
                         <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                            <button class="px-4 py-2 bg-brand-500 text-white rounded-full text-sm font-bold whitespace-nowrap">الكل</button>
-                            <button class="px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">ألبسة رجال</button>
-                            <button class="px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">أحذية</button>
-                            <button class="px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">إكسسوارات</button>
+                            <button onclick="filterPOS('الكل')" class="pos-cat-btn active-cat px-4 py-2 bg-brand-500 text-white rounded-full text-sm font-bold whitespace-nowrap">الكل</button>
+                            <button onclick="filterPOS('ألبسة رجال')" class="pos-cat-btn px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">ألبسة رجال</button>
+                            <button onclick="filterPOS('أحذية')" class="pos-cat-btn px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">أحذية</button>
+                            <button onclick="filterPOS('إكسسوارات')" class="pos-cat-btn px-4 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition">إكسسوارات</button>
                         </div>
 
                         <!-- Search -->
                         <div class="relative mb-6">
-                            <input type="text" placeholder="سكان كود بار أو ابحث عن منتج..." class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl py-3 pr-12 pl-4 focus:outline-none focus:ring-2 focus:ring-brand-500 text-lg shadow-inner">
+                            <input type="text" id="pos-search" onkeyup="searchPOS()" placeholder="سكان كود بار أو ابحث عن منتج..." class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl py-3 pr-12 pl-4 focus:outline-none focus:ring-2 focus:ring-brand-500 text-lg shadow-inner">
                             <i class="fa-solid fa-barcode absolute right-4 top-4 text-brand-400 text-xl"></i>
                         </div>
 
                         <!-- Product Cards -->
-                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4" id="pos-products">
                             <!-- Item 1 -->
-                            <div onclick="addToCart('قميص كلاسيكي أسود', 3500)" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
+                            <div data-category="ألبسة رجال" onclick="addToCart('قميص كلاسيكي أسود', 3500)" class="pos-item bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
                                 <div class="h-32 bg-gray-700 flex items-center justify-center text-4xl text-gray-500 group-hover:scale-105 transition-transform"><i class="fa-solid fa-shirt"></i></div>
                                 <div class="p-3">
                                     <h4 class="text-sm font-bold text-white truncate">قميص كلاسيكي أسود</h4>
@@ -284,7 +284,7 @@
                                 </div>
                             </div>
                             <!-- Item 2 -->
-                            <div onclick="addToCart('حذاء رياضي نايك', 8500)" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
+                            <div data-category="أحذية" onclick="addToCart('حذاء رياضي نايك', 8500)" class="pos-item bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
                                 <div class="h-32 bg-gray-700 flex items-center justify-center text-4xl text-gray-500 group-hover:scale-105 transition-transform"><i class="fa-solid fa-shoe-prints"></i></div>
                                 <div class="p-3">
                                     <h4 class="text-sm font-bold text-white truncate">حذاء رياضي نايك</h4>
@@ -295,7 +295,7 @@
                                 </div>
                             </div>
                             <!-- Item 3 -->
-                            <div onclick="addToCart('ساعة ذكية', 5200)" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
+                            <div data-category="إكسسوارات" onclick="addToCart('ساعة ذكية', 5200)" class="pos-item bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
                                 <div class="h-32 bg-gray-700 flex items-center justify-center text-4xl text-gray-500 group-hover:scale-105 transition-transform"><i class="fa-solid fa-stopwatch"></i></div>
                                 <div class="p-3">
                                     <h4 class="text-sm font-bold text-white truncate">ساعة ذكية</h4>
@@ -306,7 +306,7 @@
                                 </div>
                             </div>
                              <!-- Item 4 -->
-                             <div onclick="addToCart('سروال جينز أزرق', 4200)" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
+                             <div data-category="ألبسة رجال" onclick="addToCart('سروال جينز أزرق', 4200)" class="pos-item bg-gray-800 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-brand-500 transition group shadow-sm">
                                 <div class="h-32 bg-gray-700 flex items-center justify-center text-4xl text-gray-500 group-hover:scale-105 transition-transform"><i class="fa-solid fa-person-walking"></i></div>
                                 <div class="p-3">
                                     <h4 class="text-sm font-bold text-white truncate">سروال جينز أزرق</h4>
@@ -347,16 +347,116 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 mb-2">
-                                <button onclick="showToast('تم تسجيل الدفع نقداً وطباعة التذكرة بنجاح!')" class="bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-lg font-bold transition text-lg flex flex-col items-center justify-center">
+                                <button onclick="checkoutPOS('cash')" class="bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-lg font-bold transition text-lg flex flex-col items-center justify-center">
                                     <i class="fa-solid fa-money-bill-wave mb-1"></i> كاش
                                 </button>
-                                <button onclick="showToast('تم تحويل الفاتورة إلى ديون الزبون (كريدي).')" class="bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold transition text-lg flex flex-col items-center justify-center">
+                                <button onclick="checkoutPOS('credit')" class="bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold transition text-lg flex flex-col items-center justify-center">
                                     <i class="fa-solid fa-book mb-1"></i> كريدي
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Inventory Tab -->
+                <div id="merchant-tab-inventory" class="merchant-tab-content hidden flex-1 p-6 overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">إدارة المخزون</h2>
+                        <button class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+                        </button>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                        <table class="w-full text-right text-sm text-gray-300">
+                            <thead class="text-xs text-gray-400 bg-gray-900 uppercase">
+                                <tr>
+                                    <th class="px-6 py-4">المنتج</th>
+                                    <th class="px-6 py-4">القسم</th>
+                                    <th class="px-6 py-4">السعر</th>
+                                    <th class="px-6 py-4">الكمية المتوفرة</th>
+                                    <th class="px-6 py-4 text-left">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                                    <td class="px-6 py-4 font-bold text-white">قميص كلاسيكي أسود</td>
+                                    <td class="px-6 py-4">ألبسة رجال</td>
+                                    <td class="px-6 py-4 text-brand-400">3,500 د.ج</td>
+                                    <td class="px-6 py-4">12</td>
+                                    <td class="px-6 py-4 text-left">
+                                        <button class="text-gray-400 hover:text-white mx-1"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="text-red-400 hover:text-white mx-1"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                                    <td class="px-6 py-4 font-bold text-white">حذاء رياضي نايك</td>
+                                    <td class="px-6 py-4">أحذية</td>
+                                    <td class="px-6 py-4 text-brand-400">8,500 د.ج</td>
+                                    <td class="px-6 py-4">5</td>
+                                    <td class="px-6 py-4 text-left">
+                                        <button class="text-gray-400 hover:text-white mx-1"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="text-red-400 hover:text-white mx-1"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Debts Tab -->
+                <div id="merchant-tab-debts" class="merchant-tab-content hidden flex-1 p-6 overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">كارني الديون (كريدي)</h2>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2">
+                            <i class="fa-solid fa-user-plus"></i> إضافة زبون
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-white text-lg">أحمد (جار المحل)</h3>
+                                <p class="text-sm text-gray-400">آخر تحديث: اليوم</p>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-orange-400 font-bold text-xl mb-1">12,500 د.ج</p>
+                                <button onclick="showToast('تم تسديد الدين بنجاح')" class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1 rounded hover:bg-brand-500 hover:text-white transition">تسديد</button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-white text-lg">رضا (عامل)</h3>
+                                <p class="text-sm text-gray-400">آخر تحديث: منذ أسبوع</p>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-orange-400 font-bold text-xl mb-1">4,200 د.ج</p>
+                                <button onclick="showToast('تم تسديد الدين بنجاح')" class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1 rounded hover:bg-brand-500 hover:text-white transition">تسديد</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Tab -->
+                <div id="merchant-tab-stats" class="merchant-tab-content hidden flex-1 p-6 overflow-y-auto">
+                    <h2 class="text-2xl font-bold text-white mb-6">إحصائيات المبيعات</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                            <p class="text-gray-400 mb-2">مبيعات اليوم</p>
+                            <h3 class="text-3xl font-bold text-brand-400">45,000 د.ج</h3>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                            <p class="text-gray-400 mb-2">مبيعات الشهر</p>
+                            <h3 class="text-3xl font-bold text-white">850,000 د.ج</h3>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                            <p class="text-gray-400 mb-2">إجمالي الديون</p>
+                            <h3 class="text-3xl font-bold text-orange-400">16,700 د.ج</h3>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 h-64 flex items-center justify-center">
+                        <p class="text-gray-500"><i class="fa-solid fa-chart-line text-4xl mb-2 block text-center"></i> سيتم عرض الرسم البياني هنا</p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -373,16 +473,16 @@
                             <span class="font-bold text-2xl text-gray-900 dark:text-white">Boutique El Anik</span>
                         </div>
                         <nav class="hidden md:flex space-x-8 space-x-reverse">
-                            <a href="#" class="text-gray-900 dark:text-white font-medium hover:text-brand-500 transition">الرئيسية</a>
-                            <a href="#" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition">رجال</a>
-                            <a href="#" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition">إكسسوارات</a>
-                            <a href="#" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition">تخفيضات</a>
+                            <a href="#" onclick="filterShop('الكل')" class="text-brand-500 font-medium transition shop-nav-link">الرئيسية</a>
+                            <a href="#" onclick="filterShop('ألبسة رجال')" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition shop-nav-link">رجال</a>
+                            <a href="#" onclick="filterShop('إكسسوارات')" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition shop-nav-link">إكسسوارات</a>
+                            <a href="#" onclick="filterShop('تخفيضات')" class="text-gray-500 dark:text-gray-400 font-medium hover:text-brand-500 transition shop-nav-link">تخفيضات</a>
                         </nav>
                         <div class="flex items-center gap-4">
                             <button class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition"><i class="fa-solid fa-search text-xl"></i></button>
-                            <button class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition relative">
+                            <button onclick="toggleShopCart()" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition relative">
                                 <i class="fa-solid fa-bag-shopping text-xl"></i>
-                                <span class="absolute -top-2 -right-2 bg-brand-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">2</span>
+                                <span id="shop-cart-badge" class="absolute -top-2 -right-2 bg-brand-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
                             </button>
                         </div>
                     </div>
@@ -405,10 +505,10 @@
 
             <!-- Product Grid -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">وصل حديثاً</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <h2 id="shop-section-title" class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">وصل حديثاً</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="shop-products-grid">
                     <!-- Shop Item 1 -->
-                    <div class="group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div data-category="ألبسة رجال" class="shop-item group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
                         <div class="relative h-64 bg-gray-100 dark:bg-slate-800 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Shirt" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">جديد</div>
@@ -418,7 +518,7 @@
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">قميص كلاسيكي أسود</h3>
                             <div class="flex justify-between items-center mt-4">
                                 <span class="text-xl font-bold text-gray-900 dark:text-white">3,500 د.ج</span>
-                                <button onclick="showToast('تم إضافة القميص إلى سلة التسوق')" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
+                                <button onclick="addToShopCart('قميص كلاسيكي أسود', 3500)" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
@@ -426,7 +526,7 @@
                     </div>
 
                     <!-- Shop Item 2 -->
-                    <div class="group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div data-category="أحذية" class="shop-item group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
                         <div class="relative h-64 bg-gray-100 dark:bg-slate-800 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Shoes" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -435,7 +535,7 @@
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">حذاء رياضي نايك أير</h3>
                             <div class="flex justify-between items-center mt-4">
                                 <span class="text-xl font-bold text-gray-900 dark:text-white">8,500 د.ج</span>
-                                <button onclick="showToast('تم إضافة الحذاء إلى سلة التسوق')" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
+                                <button onclick="addToShopCart('حذاء رياضي نايك أير', 8500)" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
@@ -443,7 +543,7 @@
                     </div>
 
                     <!-- Shop Item 3 -->
-                    <div class="group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div data-category="إكسسوارات" class="shop-item group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
                         <div class="relative h-64 bg-gray-100 dark:bg-slate-800 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Watch" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -452,7 +552,7 @@
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">ساعة ذكية رياضية</h3>
                             <div class="flex justify-between items-center mt-4">
                                 <span class="text-xl font-bold text-gray-900 dark:text-white">5,200 د.ج</span>
-                                <button onclick="showToast('تم إضافة الساعة إلى سلة التسوق')" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
+                                <button onclick="addToShopCart('ساعة ذكية رياضية', 5200)" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
@@ -460,7 +560,7 @@
                     </div>
 
                     <!-- Shop Item 4 -->
-                    <div class="group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div data-category="ألبسة رجال" class="shop-item تخفيضات group bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl transition-all duration-300">
                         <div class="relative h-64 bg-gray-100 dark:bg-slate-800 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Jeans" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-3 right-3 bg-brand-500 text-white text-xs font-bold px-2 py-1 rounded">-20%</div>
@@ -473,7 +573,7 @@
                                     <span class="text-sm text-gray-400 line-through">5,250 د.ج</span>
                                     <span class="text-xl font-bold text-brand-500">4,200 د.ج</span>
                                 </div>
-                                <button onclick="showToast('تم إضافة السروال إلى سلة التسوق')" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
+                                <button onclick="addToShopCart('سروال جينز كلاسيك', 4200)" class="w-10 h-10 bg-gray-100 dark:bg-slate-700 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-500 text-gray-700 dark:text-white rounded-full flex items-center justify-center transition shadow-sm">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
@@ -486,6 +586,71 @@
             <footer class="bg-white dark:bg-dark-card border-t border-gray-100 dark:border-dark-border py-8 mt-12 text-center text-gray-500 text-sm">
                 <p>تم الإنشاء بواسطة <span class="font-bold text-brand-500">LinkPlus</span> © 2026</p>
             </footer>
+
+            <!-- Shop Cart Sidebar Overlay -->
+            <div id="shop-cart-sidebar" class="fixed inset-y-0 right-0 w-80 lg:w-96 bg-white dark:bg-dark-card shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-gray-200 dark:border-dark-border">
+                <div class="p-4 border-b border-gray-200 dark:border-dark-border flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white"><i class="fa-solid fa-cart-shopping mr-2 text-brand-500"></i> سلة التسوق</h3>
+                    <button onclick="toggleShopCart()" class="text-gray-500 hover:text-red-500 transition"><i class="fa-solid fa-times text-xl"></i></button>
+                </div>
+
+                <div id="shop-cart-items" class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <!-- Shop cart items injected here -->
+                    <div class="text-center text-gray-500 mt-10">
+                        <i class="fa-solid fa-basket-shopping text-4xl mb-3 opacity-20"></i>
+                        <p>السلة فارغة حالياً.</p>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-slate-800/50">
+                    <div class="flex justify-between text-gray-600 dark:text-gray-300 mb-2">
+                        <span>المجموع الفرعي:</span>
+                        <span id="shop-cart-total-text" class="font-bold">0 د.ج</span>
+                    </div>
+                    <button onclick="checkoutShopCart()" class="w-full bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-lg font-bold transition text-lg mt-2 shadow-md">
+                        إتمام الطلب
+                    </button>
+                </div>
+            </div>
+            <!-- Overlay background for cart -->
+            <div id="shop-cart-overlay" onclick="toggleShopCart()" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODALS -->
+        <!-- ========================================== -->
+        <!-- Add Merchant Modal -->
+        <div id="add-merchant-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('add-merchant-modal').classList.add('hidden')"></div>
+            <div class="bg-white dark:bg-dark-card w-full max-w-lg rounded-2xl shadow-2xl z-10 p-6 relative animation-fade-in border border-gray-200 dark:border-dark-border mx-4">
+                <button onclick="document.getElementById('add-merchant-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">إضافة تاجر جديد</h2>
+
+                <form id="add-merchant-form" onsubmit="addMerchant(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم المحل</label>
+                            <input type="text" id="new-store-name" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم التاجر</label>
+                            <input type="text" id="new-merchant-name" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الباقة</label>
+                            <select id="new-plan" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                                <option value="Basic">Basic</option>
+                                <option value="Pro">Pro</option>
+                                <option value="Premium">Premium</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex justify-end gap-3">
+                        <button type="button" onclick="document.getElementById('add-merchant-modal').classList.add('hidden')" class="px-5 py-2.5 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition">إلغاء</button>
+                        <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition shadow-md">إضافة التاجر</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     </main>
