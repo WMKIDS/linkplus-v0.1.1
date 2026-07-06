@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}لوحة التحكم - الإدارة المركزية{% endblock %}
+
+{% block content %}
+<div class="h-full w-full bg-gray-50 dark:bg-dark-bg overflow-y-auto p-6 fade-in">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">لوحة تحكم المنصة</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">مرحباً بك، أيها المدير العام. نظرة شاملة على أداء LinkPlus.</p>
+            </div>
+            <button onclick="document.getElementById('add-merchant-modal').classList.remove('hidden')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium transition shadow-lg shadow-brand-500/30 flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> إضافة تاجر جديد
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-dark-card rounded-xl p-6 border border-gray-100 dark:border-dark-border shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">إجمالي المتاجر</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ stores|length }}</h3>
+                    </div>
+                    <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-500">
+                        <i class="fa-solid fa-shop text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-dark-card rounded-xl p-6 border border-gray-100 dark:border-dark-border shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-brand-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">الاشتراكات النشطة</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ active_stores_count }}</h3>
+                    </div>
+                    <div class="p-3 bg-brand-50 dark:bg-brand-900/20 rounded-lg text-brand-500">
+                        <i class="fa-solid fa-check-circle text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-dark-card rounded-xl p-6 border border-gray-100 dark:border-dark-border shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-orange-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">اشتراكات متأخرة</p>
+                        <h3 class="text-3xl font-bold mt-2">0</h3>
+                    </div>
+                    <div class="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-500">
+                        <i class="fa-solid fa-clock text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-dark-card rounded-xl p-6 border border-gray-100 dark:border-dark-border shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-purple-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">أرباح المنصة (الشهر)</p>
+                        <h3 class="text-3xl font-bold mt-2">450,000<span class="text-lg text-gray-500 ml-1">DZD</span></h3>
+                    </div>
+                    <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-500">
+                        <i class="fa-solid fa-wallet text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Merchants Table -->
+        <div class="bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border overflow-hidden shadow-sm">
+            <div class="p-5 border-b border-gray-100 dark:border-dark-border flex justify-between items-center">
+                <h2 class="text-lg font-bold">إدارة التجار</h2>
+                <div class="relative">
+                    <input type="text" id="merchant-search" onkeyup="filterMerchants()" placeholder="بحث عن تاجر..." class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-64 pr-10 p-2.5 outline-none transition">
+                    <i class="fa-solid fa-search absolute right-3 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm" id="merchants-table">
+                    <thead class="text-xs text-gray-500 bg-gray-50 dark:bg-slate-800 uppercase">
+                        <tr>
+                            <th class="px-6 py-4 font-medium">رابط المتجر</th>
+                            <th class="px-6 py-4 font-medium">اسم المحل</th>
+                            <th class="px-6 py-4 font-medium">التاجر</th>
+                            <th class="px-6 py-4 font-medium">الباقة</th>
+                            <th class="px-6 py-4 font-medium">حالة المتجر</th>
+                            <th class="px-6 py-4 font-medium text-left">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in stores %}
+                        <tr class="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-slate-800/50 transition">
+                            <td class="px-6 py-4">
+                                <a href="{{ url_for('shop_view', store_id=s.id) }}" target="_blank" class="text-blue-500 hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i> زيارة
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 font-bold text-brand-400">{{ s.name }}</td>
+                            <td class="px-6 py-4">{{ s.owner.username }}</td>
+                            <td class="px-6 py-4">
+                                {% if s.plan == 'Pro' %}
+                                <span class="px-2.5 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 rounded-full text-xs font-bold">Pro</span>
+                                {% elif s.plan == 'Premium' %}
+                                <span class="px-2.5 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 rounded-full text-xs font-bold">Premium</span>
+                                {% else %}
+                                <span class="px-2.5 py-1 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 rounded-full text-xs font-bold">Basic</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center text-green-500"><div class="h-2.5 w-2.5 rounded-full bg-green-500 ml-2"></div> نشط</span>
+                            </td>
+                            <td class="px-6 py-4 text-left">
+                                <button class="text-gray-400 hover:text-white bg-slate-700 p-2 rounded transition"><i class="fa-solid fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Merchant Modal -->
+<div id="add-merchant-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('add-merchant-modal').classList.add('hidden')"></div>
+    <div class="bg-white dark:bg-dark-card w-full max-w-lg rounded-2xl shadow-2xl z-10 p-6 relative animation-fade-in border border-gray-200 dark:border-dark-border mx-4">
+        <button onclick="document.getElementById('add-merchant-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">إضافة تاجر جديد</h2>
+
+        <form id="add-merchant-form" onsubmit="submitNewMerchant(event)">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم المحل</label>
+                    <input type="text" id="new-store-name" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم المستخدم (التاجر)</label>
+                    <input type="text" id="new-merchant-name" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الباقة</label>
+                    <select id="new-plan" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none">
+                        <option value="Basic">Basic</option>
+                        <option value="Pro">Pro</option>
+                        <option value="Premium">Premium</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('add-merchant-modal').classList.add('hidden')" class="px-5 py-2.5 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition">إلغاء</button>
+                <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition shadow-md">إضافة التاجر</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    async function submitNewMerchant(e) {
+        e.preventDefault();
+        const storeName = document.getElementById('new-store-name').value;
+        const merchantName = document.getElementById('new-merchant-name').value;
+        const plan = document.getElementById('new-plan').value;
+
+        try {
+            const response = await fetch('/admin/add_merchant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ storeName, merchantName, plan })
+            });
+            const result = await response.json();
+            if(result.success) {
+                showToast(result.message);
+                document.getElementById('add-merchant-modal').classList.add('hidden');
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                alert(result.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("حدث خطأ أثناء الإضافة");
+        }
+    }
+</script>
+{% endblock %}

@@ -169,38 +169,6 @@ function filterMerchants() {
     });
 }
 
-function addMerchant(e) {
-    e.preventDefault();
-    const storeName = document.getElementById('new-store-name').value;
-    const merchantName = document.getElementById('new-merchant-name').value;
-    const plan = document.getElementById('new-plan').value;
-
-    // Determine plan badge colors
-    let planBadge = '';
-    if (plan === 'Pro') planBadge = '<span class="px-2.5 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 rounded-full text-xs font-bold">Pro</span>';
-    else if (plan === 'Premium') planBadge = '<span class="px-2.5 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 rounded-full text-xs font-bold">Premium</span>';
-    else planBadge = '<span class="px-2.5 py-1 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 rounded-full text-xs font-bold">Basic</span>';
-
-    const newRow = `
-        <tr class="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-slate-800/50 transition">
-            <td class="px-6 py-4 font-bold text-brand-400">${storeName}</td>
-            <td class="px-6 py-4">${merchantName}</td>
-            <td class="px-6 py-4">${planBadge}</td>
-            <td class="px-6 py-4">
-                <span class="flex items-center text-green-500"><div class="h-2.5 w-2.5 rounded-full bg-green-500 ml-2"></div> نشط</span>
-            </td>
-            <td class="px-6 py-4 text-left">
-                <button class="text-gray-400 hover:text-white bg-slate-700 p-2 rounded transition"><i class="fa-solid fa-pen"></i></button>
-                <button class="text-red-400 hover:text-white bg-red-900/30 p-2 rounded transition mr-1"><i class="fa-solid fa-lock"></i></button>
-            </td>
-        </tr>
-    `;
-
-    document.querySelector('#merchants-table tbody').insertAdjacentHTML('afterbegin', newRow);
-    document.getElementById('add-merchant-modal').classList.add('hidden');
-    document.getElementById('add-merchant-form').reset();
-    showToast('تمت إضافة التاجر الجديد بنجاح!');
-}
 
 // --- Merchant Interactivity ---
 function switchMerchantTab(tabId) {
@@ -371,17 +339,8 @@ function toggleShopCart() {
     }
 }
 
-function checkoutShopCart() {
-    if (shopCart.length === 0) {
-        showToast('السلة فارغة.');
-        return;
-    }
-    showToast('تم استلام طلبك! سيتم التواصل معك قريباً.');
-    shopCart = [];
-    updateShopCartBadge();
-    renderShopCart();
-    toggleShopCart();
-}
+// Note: checkoutShopCart logic is handled in the template (shop.html) via submitShopCheckout to access store_id.
+// The same applies to addMerchant (admin.html) and deleteProduct (merchant.html).
 
 function filterShop(category) {
     const items = document.querySelectorAll('.shop-item');

@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+flask.log
+.env
+linkplus.db
+instance/

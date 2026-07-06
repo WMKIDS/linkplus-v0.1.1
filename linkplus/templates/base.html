@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LinkPlus - المنظومة الشاملة{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Tajawal', 'sans-serif'], },
+                    colors: {
+                        brand: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', },
+                        dark: { bg: '#0f172a', card: '#1e293b', border: '#334155' }
+                    }
+                }
+            }
+        }
+    </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-800 dark:text-gray-100 font-sans antialiased transition-colors duration-300 h-screen flex flex-col overflow-hidden">
+
+    {% block navbar %}
+    <nav class="bg-white dark:bg-dark-card border-b border-gray-200 dark:border-dark-border shadow-sm z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-link text-brand-500 text-2xl"></i>
+                    <span class="font-bold text-2xl tracking-tight">Link<span class="text-brand-500">Plus</span></span>
+                </div>
+
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    {% if current_user.is_authenticated %}
+                        <span class="text-sm font-medium mr-4">مرحباً، {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="text-red-500 hover:text-red-600 transition"><i class="fa-solid fa-sign-out-alt"></i> تسجيل الخروج</a>
+                    {% endif %}
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                        <i id="theme-icon" class="fa-solid fa-moon text-xl text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+    <main class="flex-1 overflow-hidden relative">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl shadow-2xl font-bold flex items-center gap-3 z-50 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand-400 dark:text-brand-500 text-xl"></i>
+        <span id="toast-message">تمت العملية بنجاح!</span>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}تسجيل الدخول - LinkPlus{% endblock %}
+{% block navbar %}
+<nav class="bg-white dark:bg-dark-card border-b border-gray-200 dark:border-dark-border shadow-sm z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-link text-brand-500 text-2xl"></i>
+                <span class="font-bold text-2xl tracking-tight">Link<span class="text-brand-500">Plus</span></span>
+            </div>
+            <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                <i id="theme-icon" class="fa-solid fa-moon text-xl text-gray-600 dark:text-gray-300"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center h-full bg-gray-50 dark:bg-dark-bg p-4">
+    <div class="bg-white dark:bg-dark-card w-full max-w-md rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-dark-border fade-in">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">تسجيل الدخول</h1>
+            <p class="text-gray-500 mt-2">مرحباً بك في منصة LinkPlus</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="mb-4 p-3 rounded-lg text-sm text-center font-medium {% if category == 'error' %}bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400{% else %}bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400{% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم المستخدم</label>
+                    <input type="text" name="username" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-3 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور</label>
+                    <input type="password" name="password" required class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-3 text-gray-900 dark:text-white focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                </div>
+                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-lg font-bold text-lg transition shadow-md mt-4">
+                    دخول
+                </button>
+            </div>
+        </form>
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>للتجربة: ادخل كـ <strong>admin / admin123</strong></p>
+            <p>أو كتاجر: <strong>omar / omar123</strong></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
